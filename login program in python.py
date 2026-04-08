@@ -1,16 +1,18 @@
-users = {"user1": "password1", "user2": "password2"}
+import hashlib
+import getpass
+
+def hash_password(password):
+    return hashlib.sha256(password.encode()).hexdigest()
+
+users = {"user1": hash_password("password1"), "user2": hash_password("password2")}
 
 def login():
     username = input("Enter your username: ")
-    password = input("Enter your password: ")
+    password = getpass.getpass("Enter your password: ")
     
-    if username in users:
-        if users[username] == password:
-            print("Login successful!")
-        else:
-            print("Incorrect password.")
+    if username in users and users[username] == hash_password(password):
+        print("Login successful!")
+        return True
     else:
-        print("Username not found.")
-
-# Example usage
-login()
+        print("Invalid credentials.")
+        return False
